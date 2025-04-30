@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cruise Ship Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="css/styles.css" rel="stylesheet" />
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js" defer></script>
+  <script src="js/index.js" defer></script>
+  <style>
+  /* Full screen hero with luxury background */
+  .hero {
+    height: 100vh;
+    background: url('https://imgs.search.brave.com/Akepa5Lsb_JzGbPeLF8TuwYlWs5Gq9VKgZEbxT6QeXg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRpYS5pc3RvY2twaG90by5jb20vaWQvNDgwMTk3MTYxL3Bob3RvL2NydWlzZS1zaGlwLXdpdGgtd29uZGVyZnVsLXRyb3BpY2FsLWJlYWNoLmpwZz9zPTYxMng2MTImdz0wJms9MjAmYz1GdUdGdFBmM1NCMHNEQkwtN19vcG5EaHIwUEFPUlRVb2owcXYwbHZWVFJVPQ') no-repeat center center/cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    position: relative;
+    overflow: hidden;
+  }
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      animation: fadeInDown 1s ease forwards;
+    }
+    .hero p {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+      animation: fadeInUp 1s ease forwards;
+      animation-delay: 0.5s;
+    }
+    @keyframes fadeInDown {
+      from {opacity: 0; transform: translateY(-50px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    @keyframes fadeInUp {
+      from {opacity: 0; transform: translateY(50px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    @media (max-width: 991.98px) {
+  /* About section stack vertically */
+  .about-section {
+    flex-direction: column;
+    text-align: center;
+  }
+  .about-section img,
+  .about-content {
+    max-width: 100%;
+  }
+  .about-section img {
+    margin-bottom: 1.5rem;
+  }
+  /* Services cards full width */
+  #services-cards .col-md-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  /* Reviews cards full width */
+  #reviews-cards .col-md-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  /* Navbar adjustments */
+  .navbar-nav {
+    flex-direction: column;
+    align-items: center;
+  }
+  .navbar-nav .nav-item {
+    margin-bottom: 0.5rem;
+  }
+  .d-flex > a.btn {
+    margin: 0.25rem 0;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* Hero heading smaller */
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  .hero p {
+    font-size: 1rem;
+  }
+  /* Contact form full width */
+  #contact-form {
+    width: 100% !important;
+  }
+}
+
+/* Adjust container max-width to reduce excessive side space */
+.container {
+  max-width: 1140px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+
+    
+    /* Navigation styling */
+    .navbar-brand svg {
+      width: 40px;
+      height: 40px;
+      fill: #007bff;
+    }
+
+    /* About section */
+    .about-section {
+      padding: 4rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .about-section img {
+      max-width: 50%;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      animation: fadeInLeft 1s ease forwards;
+    }
+    .about-content {
+      max-width: 50%;
+      animation: fadeInRight 1s ease forwards;
+    }
+    @keyframes fadeInLeft {
+      from {opacity: 0; transform: translateX(-50px);}
+      to {opacity: 1; transform: translateX(0);}
+    }
+    @keyframes fadeInRight {
+      from {opacity: 0; transform: translateX(50px);}
+      to {opacity: 1; transform: translateX(0);}
+    }
+    /* Services cards */
+    .services-section {
+      padding: 4rem 2rem;
+      background: #f8f9fa;
+    }
+    .service-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+      background: #fff;
+    }
+    .service-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .service-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    .service-card-body {
+      padding: 1rem;
+      text-align: center;
+    }
+    /* Reviews section */
+    .reviews-section {
+      padding: 4rem 2rem;
+    }
+    .review-card {
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      background: #fff;
+      transition: box-shadow 0.3s ease;
+    }
+    .review-card:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    /* Contact section */
+    .contact-section {
+      padding: 4rem 2rem;
+      background: #f8f9fa;
+    }
+    /* Footer */
+    footer {
+      background: #001f3f;
+      color: #fff;
+      padding: 2rem 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      position: relative;
+    }
+    footer svg {
+      width: 30px;
+      height: 30px;
+      fill: #007bff;
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <!-- Ship icon SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <path d="M32 2L12 22v20l20 20 20-20V22L32 2z" />
+          <path d="M22 42h20v6H22z" fill="#007bff"/>
+        </svg>
+        <span class="ms-2 fw-bold text-primary">CruiseShip</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link active" href="#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="#reviews">Reviews</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+        </ul>
+        <div class="d-flex">
+          <a href="login.html" class="btn btn-outline-primary me-2">Login</a>
+          <a href="signup.html" class="btn btn-primary">Signup</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero text-center">
+    <h1>Cruise Ship Management</h1>
+    <img src="https://imgs.search.brave.com/Akepa5Lsb_JzGbPeLF8TuwYlWs5Gq9VKgZEbxT6QeXg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRpYS5pc3RvY2twaG90by5jb20vaWQvNDgwMTk3MTYxL3Bob3RvL2NydWlzZS1zaGlwLXdpdGgtd29uZGVyZnVsLXRyb3BpY2FsLWJlYWNoLmpwZz9zPTYxMng2MTImdz0wJms9MjAmYz1GdUdGdFBmM1NCMHNEQkwtN19vcG5EaHIwUEFPUlRVb2owcXYwbHZWVFJVPQ" alt="Cruise Ship" />
+    <p class="lead">Experience luxury and seamless management at sea</p>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about-section container">
+    <img src="https://imgs.search.brave.com/KgfXYWxFC6LYxjZEbWJIHyippqS7GBkPLulS-zNwbQU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzAwLzgxLzgyLzQ1/LzM2MF9GXzgxODI0/NTU1X1VmNWFsUmJG/SW02c3pQY240SHVR/c3ZVRDY1SGN3YXJI/LmpwZw" alt="Cruise Ship" />
+    <div class="about-content">
+      <h2>About Our Cruise Management System</h2>
+      <p>
+        Our Cruise Ship Management System offers a comprehensive platform to manage all aspects of cruise operations, from bookings and staff assignments to payments and customer feedback. Designed with luxury and efficiency in mind, it ensures a premium experience for both staff and passengers.
+      </p>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="services-section container">
+    <h2 class="mb-4 text-center">Our Services</h2>
+    <div id="services-cards" class="row g-4">
+      <!-- Service cards will be dynamically inserted here -->
+    </div>
+  </section>
+
+  <!-- Reviews Section -->
+  <section id="reviews" class="reviews-section container">
+    <h2 class="mb-4 text-center">Customer Reviews</h2>
+    <div id="reviews-cards" class="row g-4">
+      <!-- Review cards will be dynamically inserted here -->
+    </div>
+    <div id="review-form-container" class="mt-4">
+      <!-- Review submission form will be inserted here if user is logged in -->
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact-section container">
+    <h2 class="mb-4 text-center">Contact Us</h2>
+    <form id="contact-form" class="mx-auto" style="max-width: 600px;">
+      <div class="mb-3">
+        <label for="contact-name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="contact-name" required />
+      </div>
+      <div class="mb-3">
+        <label for="contact-email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="contact-email" required />
+      </div>
+      <div class="mb-3">
+        <label for="contact-message" class="form-label">Message</label>
+        <textarea class="form-control" id="contact-message" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Send Message</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container d-flex justify-content-center align-items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <path d="M32 2L12 22v20l20 20 20-20V22L32 2z" />
+        <path d="M22 42h20v6H22z" fill="#007bff"/>
+      </svg>
+      <span>© 2024 Cruise Ship Management. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
